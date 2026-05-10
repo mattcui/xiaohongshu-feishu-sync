@@ -1,0 +1,9 @@
+.env
+__pycache__/
+MediaCrawler/
+*.pyc
+data/*.jsonl
+data/*.json
+*.mp4
+test_*.py
+debug*.py
