@@ -1,0 +1,82 @@
+{
+  "name": "小红书数据抓取",
+  "description": "爬取小红书数据并写入飞书表格，支持自定义关键词、排序方式和抓取数量",
+  "version": "1.0.0",
+  "author": "Matt Cui",
+  "icon": "📕",
+  "parameters": [
+    {
+      "name": "keywords",
+      "display_name": "搜索关键词",
+      "type": "string",
+      "required": true,
+      "description": "要搜索的小红书关键词，多个关键词用逗号分隔，如：针灸,中医美容",
+      "default": "针灸"
+    },
+    {
+      "name": "sort_type",
+      "display_name": "排序方式",
+      "type": "select",
+      "required": false,
+      "description": "搜索结果的排序方式",
+      "options": [
+        {
+          "value": "general",
+          "label": "综合排序"
+        },
+        {
+          "value": "popular",
+          "label": "最多点赞"
+        },
+        {
+          "value": "latest",
+          "label": "最新发布"
+        }
+      ],
+      "default": "general"
+    },
+    {
+      "name": "count",
+      "display_name": "抓取数量",
+      "type": "number",
+      "required": false,
+      "description": "要抓取的笔记数量",
+      "default": 15,
+      "minimum": 1,
+      "maximum": 100
+    }
+  ],
+  "actions": [
+    {
+      "name": "crawl",
+      "display_name": "开始抓取",
+      "description": "爬取小红书数据并写入飞书表格",
+      "command": "cd /Users/mattcui/Downloads/workspace/sync_feishu && uv run python3 pipeline.py --keys {{keywords}} --sort {{sort_type}} --count {{count}}",
+      "working_directory": "/Users/mattcui/Downloads/workspace/sync_feishu",
+      "requires_approval": false,
+      "blocking": true,
+      "output_format": "text"
+    }
+  ],
+  "config": {
+    "requires_env": true,
+    "env_file": ".env",
+    "env_vars": [
+      {
+        "name": "FEISHU_APP_ID",
+        "display_name": "飞书APP ID",
+        "description": "飞书应用的APP ID"
+      },
+      {
+        "name": "FEISHU_APP_SECRET",
+        "display_name": "飞书APP Secret",
+        "description": "飞书应用的APP Secret"
+      },
+      {
+        "name": "BITABLE_URL",
+        "display_name": "飞书表格URL",
+        "description": "目标飞书表格的完整URL"
+      }
+    ]
+  }
+}
