@@ -57,14 +57,18 @@ cd ..
 echo ""
 echo "7. 配置环境变量..."
 if [ ! -f ".env" ]; then
-    cp .env.example .env 2>/dev/null || echo "FEISHU_APP_ID=your_app_id" > .env
-    echo "FEISHU_APP_SECRET=your_app_secret" >> .env
-    echo "请编辑 .env 文件填入你的飞书配置"
+    echo "启动配置向导..."
+    uv run python3 configure.py
+else
+    echo ".env 文件已存在，跳过配置"
+    echo "如需重新配置，请运行: uv run python3 configure.py"
 fi
 
 echo ""
 echo "===== 安装完成 ====="
 echo ""
-echo "下一步："
-echo "1. 编辑 .env 文件，填入你的飞书 FEISHU_APP_ID 和 FEISHU_APP_SECRET"
-echo "2. 运行 ./run.sh 关键字"
+echo "运行方式："
+echo "  ./run.sh --keys <关键词> --sort <排序方式> --count <数量>"
+echo ""
+echo "示例："
+echo "  ./run.sh --keys 针灸 --sort popular --count 10"
