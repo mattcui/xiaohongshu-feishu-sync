@@ -46,6 +46,7 @@ echo "5. 安装 Python 依赖..."
 uv pip install -r requirements.txt
 uv pip install funasr
 uv pip install -U modelscope
+uv pip install torchaudio
 
 echo ""
 echo "6. 安装 MediaCrawler 依赖..."
