@@ -9,7 +9,7 @@ test/
 .Python
 data/
 *.jsonl
-*.json
+data/*.json
 *.mp4
 *.log
 test_*.py

@@ -74,4 +74,19 @@ echo "排序方式: $SORT_TYPE"
 echo "抓取数量: $MAX_NOTES"
 echo ""
 
+echo "===== 环境检查 ====="
+uv run python3 check_env.py
+if [ $? -ne 0 ]; then
+    echo ""
+    echo "❌ 环境检查未通过，请按照上述提示完成配置后再运行"
+    echo ""
+    echo "📋 安装和配置步骤："
+    echo "  1. 进入项目目录: cd /Users/mattcui/Downloads/workspace/sync_feishu"
+    echo "  2. 运行安装脚本: ./install.sh"
+    echo "  3. 配置飞书凭证: uv run python3 configure.py"
+    echo "  4. 再次运行: ./run.sh --keys <关键词> --sort <排序> --count <数量>"
+    exit 1
+fi
+echo ""
+
 uv run python3 pipeline.py --keys "$KEYWORDS" --sort "$SORT_TYPE" --count "$MAX_NOTES"

@@ -118,6 +118,32 @@ def set_xhs_max_notes_count(max_count):
         return old_content
     return None
 
+def set_xhs_browser_config():
+    """设置浏览器配置，使用用户的 Chrome 浏览器"""
+    config_path = os.path.join('MediaCrawler', 'config', 'base_config.py')
+    if not os.path.exists(config_path):
+        print(f"警告：未找到配置文件 {config_path}")
+        return None
+
+    with open(config_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+
+    old_content = content
+
+    content = re.sub(r'ENABLE_CDP_MODE\s*=\s*False', 'ENABLE_CDP_MODE = True', content)
+    content = re.sub(r'CUSTOM_BROWSER_PATH\s*=\s*["\']["\']', 'CUSTOM_BROWSER_PATH = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"', content)
+    
+    user_home = os.environ.get("HOME", "/Users/mattcui")
+    user_data_dir = os.path.join(user_home, "Library", "Application Support", "Google", "Chrome")
+    content = re.sub(r'USER_DATA_DIR\s*=\s*["\'][^"\']*["\']', f'USER_DATA_DIR = "{user_data_dir}"', content)
+
+    if content != old_content:
+        with open(config_path, 'w', encoding='utf-8') as f:
+            f.write(content)
+        print("已设置使用用户 Chrome 浏览器")
+        return old_content
+    return None
+
 def crawl_xiaohongshu(keywords, sort_type="general", max_notes_count=15):
     print("\n===== 步骤1: 爬取小红书数据 =====")
 
@@ -135,6 +161,7 @@ def crawl_xiaohongshu(keywords, sort_type="general", max_notes_count=15):
 
     original_sort_config = set_xhs_sort_type(sort_type)
     original_count_config = set_xhs_max_notes_count(max_notes_count)
+    original_browser_config = set_xhs_browser_config()
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     all_data = []
@@ -202,6 +229,12 @@ def crawl_xiaohongshu(keywords, sort_type="general", max_notes_count=15):
             with open(config_path, 'w', encoding='utf-8') as f:
                 f.write(original_count_config)
             print("已恢复抓取数量配置")
+
+        if original_browser_config is not None:
+            config_path = os.path.join('MediaCrawler', 'config', 'base_config.py')
+            with open(config_path, 'w', encoding='utf-8') as f:
+                f.write(original_browser_config)
+            print("已恢复浏览器配置")
 
     print(f"\n爬取完成，共获取 {len(all_data)} 条数据")
 
